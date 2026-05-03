@@ -22,6 +22,7 @@ Set-Content -Path $filepath -Value $code
 
 git add $filepath
 git commit -m "Add GFG: $name"
+git pull --rebase origin main
 git push
 
 Write-Host "Done → $filepath"
