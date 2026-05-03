@@ -20,16 +20,19 @@ while ($true) {
 
 Set-Content -Path $filepath -Value $code
 
-# Format entry
-$entry = "| $name | $topic | $ext |"
+# Rebuild README from folders
+$readme = "# GFG 160 Solutions`n`n| Problem | Topic | Language |`n|--------|------|----------|"
 
-# If README doesn't have table, create it
-if (!(Test-Path "README.md") -or !(Select-String -Path "README.md" -Pattern "\| Problem \|")) {
-    "# GFG 160 Solutions`n`n| Problem | Topic | Language |`n|--------|------|----------|" | Set-Content README.md
+Get-ChildItem -Recurse -Include *.java,*.cpp,*.py | ForEach-Object {
+    $file = $_.Name
+    $topic = $_.Directory.Name
+    $name = [System.IO.Path]::GetFileNameWithoutExtension($file)
+    $ext = $_.Extension.TrimStart('.')
+
+    $readme += "`n| $name | $topic | $ext |"
 }
 
-# Append new entry
-Add-Content README.md "`n$entry"
+Set-Content README.md $readme
 
 git add .
 git commit -m "Add GFG: $name"
